@@ -2,7 +2,7 @@
 
 ## Requirements 
     ansible-core >=2.14 
-    redhat.openshift
+    oc >= 4.14
 ## setup 
 1. Copy ansible.cfg.template and name it ansible.cfg.  Get the token from here: https://console.redhat.com/ansible/automation-hub/token
 
