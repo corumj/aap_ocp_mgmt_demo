@@ -1,0 +1,20 @@
+[defaults]
+# callback_whitelist = profile_tasks
+deprecation_warnings=False
+auto_silent=True 
+
+error_on_undefined_vars = True
+
+[galaxy]
+server_list = automation_hub, galaxy 
+
+[galaxy_server.automation_hub]
+url=https://console.redhat.com/api/automation-hub/
+auth_url=https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token
+token=<token goes here>
+# retrieve a token from here: https://console.redhat.com/ansible/automation-hub/token
+
+# I almost always provide this as a failover in case I am using 
+# a mix of supported and community content.
+[galaxy_server.galaxy]
+url=https://galaxy.ansible.com
