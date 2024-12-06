@@ -46,7 +46,7 @@
       register: elastic_subscription
 
     - debug:
-        var: subscriptions.resources[0].spec.startingCSV 
+        var: elastic_subscription.resources[0].spec.startingCSV 
 
     # - name: Get current subscription information for elasticsearch 
     #   ansible.builtin.shell: oc get subscription.operators.coreos.com elasticsearch-operator -n openshift-operators-redhat -o yaml | grep currentCSV
