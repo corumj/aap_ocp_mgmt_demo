@@ -46,7 +46,7 @@
       register: elastic_subscription
 
     - debug:
-        var: elastic_subscription.resources[0].spec.startingCSV 
+        var: elastic_subscription.resources[0].spec.installedCSV 
 
     # - name: Get current subscription information for elasticsearch 
     #   ansible.builtin.shell: oc get subscription.operators.coreos.com elasticsearch-operator -n openshift-operators-redhat -o yaml | grep currentCSV
@@ -59,8 +59,8 @@
           ansible.builtin.shell: oc delete subscription.operators.coreos.com elasticsearch-operator -n openshift-operators-redhat 
 
         - name: Delete the CSV 
-          ansible.builtin.shell: oc delete clusterserviceversion {{ elastic_subscription.resources[0].spec.startingCSV }} -n openshift-operators-redhat 
-      when: elastic_subscription.resources[0].spec.startingCSV is defined 
+          ansible.builtin.shell: oc delete clusterserviceversion {{ elastic_subscription.resources[0].status.installedCSV }} -n openshift-operators-redhat 
+      when: elastic_subscription.resources[0].status.installedCSV is defined 
 
     - name: Set upgrade channel 
       ansible.builtin.shell: oc adm upgrade channel stable-4.17 
