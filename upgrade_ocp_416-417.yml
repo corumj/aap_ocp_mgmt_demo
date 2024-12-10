@@ -10,7 +10,7 @@
     openshift_api_endpoint: "{{ xtra_openshift_api | default('https://api:6443') }}"
 
     target_channel: stable-4.17 
-    current_elastic_version: 5.8.15 
+    current_elastic_version: 5.8.3 
 
   tasks:
     - name: Ensure extra_vars.yml is provided 
@@ -47,13 +47,6 @@
             msg:
               - "Current OpenShift Cluster version is {{ cluster_version.resources[0].status.history[0].version }}"
 
-        - name: Check if upgradable and exit if not
-          ansible.builtin.assert:
-            that:
-              - cluster_version.resources[0].status.availableUpdates is defined
-            fail_msg: "No updates available, updating channel"
-            success_msg: "Update available"
-
         - name: Change OpenShift update channel to target channel
           kubernetes.core.k8s:
             state: present
@@ -67,7 +60,10 @@
             api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
             host: "{{ openshift_api_endpoint }}"
             verify_ssl: False 
-          when: cluster_version.resources[0].status.availableUpdates[0].version is defined
+
+        - name: Wait for k8s to catch up to Ansible
+          ansible.builtin.pause:
+            seconds: 10 
 
         - name: Get updated OpenShift ClusterVersion info with install plan for upgrade 
           kubernetes.core.k8s_info:
@@ -157,4 +153,5 @@
             api_key: "{{ openshift_auth_results.openshift_auth.api_key }}"
             host: "{{ openshift_api_endpoint }}"
             verify_ssl: False 
+          ignore_errors: true
 
